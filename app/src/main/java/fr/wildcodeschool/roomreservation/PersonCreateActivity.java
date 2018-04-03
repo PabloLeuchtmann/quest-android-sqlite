@@ -1,11 +1,14 @@
 package fr.wildcodeschool.roomreservation;
 
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 public class PersonCreateActivity extends AppCompatActivity {
 
@@ -35,5 +38,14 @@ public class PersonCreateActivity extends AppCompatActivity {
 
     private void addPersonToDB(String firstname, String lastname) {
         // TODO : add person into database
+        DbHelper mDbHelper = new DbHelper(PersonCreateActivity.this);
+        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+
+        ContentValues person = new ContentValues();
+        person.put(DbContract.PersonEntry.COLUMN_NAME_FIRSTNAME, firstname);
+        person.put(DbContract.PersonEntry.COLUMN_NAME_LASTNAME, lastname);
+        long newPersonId = db.insert(DbContract.PersonEntry.TABLE_NAME, null, person);
+
+        Toast.makeText(this, String.valueOf(newPersonId), Toast.LENGTH_SHORT).show();
     }
 }
